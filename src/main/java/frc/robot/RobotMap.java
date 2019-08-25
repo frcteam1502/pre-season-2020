@@ -7,6 +7,11 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.cscore.UsbCamera;
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -14,13 +19,19 @@ package frc.robot;
  * floating around.
  */
 public class RobotMap {
-  // For example to map the left and right motors, you could define the
-  // following variables to use with your drivetrain subsystem.
-  // public static int leftMotor = 1;
-  // public static int rightMotor = 2;
+  
+  // Drivetrain sparks. using sparks for encoders
+  public static final CANSparkMax FRONT_RIGHT = new CANSparkMax(0, MotorType.kBrushed);
+  public static final CANSparkMax BACK_RIGHT = new CANSparkMax(1, MotorType.kBrushed);
+  public static final CANSparkMax FRONT_LEFT = new CANSparkMax(2, MotorType.kBrushed);
+  public static final CANSparkMax BACK_LEFT = new CANSparkMax(3, MotorType.kBrushed);
+  
+  // Controllers
+	public static final int LEFT_JOYSTICK = 0;
+	public static final int RIGHT_JOYSTICK = 1;
+  public static final int MANIP_JOYSTICK = 2;
+  
+  // Peripherals
+  public static final UsbCamera CAMERA = new UsbCamera("USB Camera 0", 0);
 
-  // If you are using multiple modules, make sure to define both the port
-  // number and the module. For example you with a rangefinder:
-  // public static int rangefinderPort = 1;
-  // public static int rangefinderModule = 1;
 }
