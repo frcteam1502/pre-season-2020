@@ -30,6 +30,10 @@ public class RobotMap {
 	public static final int LEFT_JOYSTICK = 0;
 	public static final int RIGHT_JOYSTICK = 1;
   public static final int MANIP_JOYSTICK = 2;
+
+  // Just random test stuff, to be commented out here, oi, and robot
+  public static final CANSparkMax LINEAR_SLIDE_LEFT = new CANSparkMax(4, MotorType.kBrushless);
+  public static final CANSparkMax LINEAR_SLIDE_RIGHT = new CANSparkMax(5, MotorType.kBrushless);
   
   // Peripherals
   public static final UsbCamera CAMERA = new UsbCamera("USB Camera 0", 0);

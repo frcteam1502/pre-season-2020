@@ -13,11 +13,12 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.LinearSlide;
 
 public class Robot extends TimedRobot {
 
   public static Drivetrain drivetrain;
-
+  public static LinearSlide slide;
   public static OI m_oi;
 
   Command m_autonomousCommand;
@@ -26,7 +27,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     drivetrain = new Drivetrain(RobotMap.FRONT_RIGHT, RobotMap.BACK_RIGHT, RobotMap.FRONT_LEFT, RobotMap.BACK_LEFT);
+    // test stuff
+    slide = new LinearSlide(RobotMap.LINEAR_SLIDE_LEFT, RobotMap.LINEAR_SLIDE_RIGHT);
     m_oi = new OI();
+
     SmartDashboard.putData("Auto mode", m_chooser);
   }
 
