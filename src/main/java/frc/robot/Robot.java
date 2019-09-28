@@ -14,13 +14,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LinearSlide;
+import frc.robot.subsystems.SwerveDrive;
 
 public class Robot extends TimedRobot {
 
   public static Drivetrain drivetrain;
   public static LinearSlide slide;
   public static OI m_oi;
-
+  public static SwerveDrive swerveDrive;  
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -29,6 +30,7 @@ public class Robot extends TimedRobot {
     drivetrain = new Drivetrain(RobotMap.FRONT_RIGHT, RobotMap.BACK_RIGHT, RobotMap.FRONT_LEFT, RobotMap.BACK_LEFT);
     // test stuff
     slide = new LinearSlide(RobotMap.LINEAR_SLIDE_LEFT, RobotMap.LINEAR_SLIDE_RIGHT);
+    swerveDrive = new SwerveDrive(RobotMap.FRONT_RIGHT_SWERVE, RobotMap.BACK_RIGHT_SWERVE, RobotMap.FRONT_LEFT_SWERVE, RobotMap.BACK_LEFT_SWERVE);
     m_oi = new OI();
 
     SmartDashboard.putData("Auto mode", m_chooser);

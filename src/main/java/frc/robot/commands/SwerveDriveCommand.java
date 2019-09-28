@@ -7,12 +7,13 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
 
 public class SwerveDriveCommand extends Command {
   public SwerveDriveCommand() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+    requires(Robot.swerveDrive);
   }
 
   // Called just before this Command runs the first time
@@ -23,6 +24,9 @@ public class SwerveDriveCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Joystick right = Robot.m_oi.rightJoystick;
+    Joystick left = Robot.m_oi.leftJoystick;
+    Robot.swerveDrive.moveByAngle(right.getY(), left.getX(), left.getX());
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -42,3 +46,4 @@ public class SwerveDriveCommand extends Command {
   protected void interrupted() {
   }
 }
+

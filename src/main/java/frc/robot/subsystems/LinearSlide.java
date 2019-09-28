@@ -44,11 +44,11 @@ public class LinearSlide extends Subsystem {
     int encVal = place == Level.bottom ? currentType.bottom : currentType.top;
     if (leftEnc.getPosition() < encVal && rightEnc.getPosition() < encVal) {
       left.set(1.0);
-      right.set(1.0);
+      right.set(-1.0);
     }
     else if (leftEnc.getPosition() > encVal && rightEnc.getPosition() > encVal) {
       left.set(-1.0);
-      right.set(-1.0);
+      right.set(1.0);
     }
   }
 

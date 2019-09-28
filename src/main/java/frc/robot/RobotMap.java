@@ -32,9 +32,8 @@ public class RobotMap {
   public static final Wheel FRONT_LEFT_SWERVE = new Wheel(new CANSparkMax(8, MotorType.kBrushed), new CANSparkMax(9, MotorType.kBrushed));
   public static final Wheel BACK_LEFT_SWERVE = new Wheel(new CANSparkMax(10, MotorType.kBrushed), new CANSparkMax(11, MotorType.kBrushed));
 
-  
   // Controllers
-	public static final int LEFT_JOYSTICK = 0;
+  public static final int LEFT_JOYSTICK = 0;
   public static final int RIGHT_JOYSTICK = 1;
   public static final int MANIP_JOYSTICK = 2;
 
