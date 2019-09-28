@@ -35,7 +35,7 @@ public class RobotMap {
   
   // Controllers
 	public static final int LEFT_JOYSTICK = 0;
-	public static final int RIGHT_JOYSTICK = 1;
+  public static final int RIGHT_JOYSTICK = 1;
   public static final int MANIP_JOYSTICK = 2;
 
   // Just random test stuff, to be commented out here, oi, and robot
