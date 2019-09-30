@@ -27,11 +27,12 @@ public class Wheel {
         this.moveMotor.set(power); // https://stackify.com/oop-concept-for-beginners-what-is-encapsulation/
     }
 
-    public void setTurn(double power) {
-        this.turnMotor.set(power);
+    public void setTargetAngle(double angle) {
+        if (getTurnAngle() > angle) turnMotor.set(-1);
+        else if (getTurnAngle() < angle) turnMotor.set(1);
     }
 
-    public double getTurnAngle() {
+    private double getTurnAngle() {
         return (turnEncoder.getPosition() / (double) turnEncoder.getCPR() * 360);
     }
 }

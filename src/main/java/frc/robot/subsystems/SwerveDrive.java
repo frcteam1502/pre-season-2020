@@ -27,24 +27,15 @@ public class SwerveDrive extends Subsystem {
     frontWheelGroup = new ArrayList<Wheel>(Arrays.asList(frontRight, frontLeft));
     backWheelGroup = new ArrayList<Wheel>(Arrays.asList(backRight, backLeft));
   }
-
-  /*
-    This move module combines the intuitive nature of the absolute one, the full 
-    utility of the relative one, but now it seperates the front and back sets of
-    tires to give added mobility
-    it averages out the x and y of two joysticks to give a seemingly tank drive
-    like drive train, but seperated differently
-  */
+  
   public void moveWIPAbs(double throttle, double rightJoystickX, double rightJoystickY, double leftJoystickX, double leftJoystickY) {
     frontWheelGroup.forEach(wheel -> {
       wheel.setSpeed(throttle);
-      if (wheel.getTurnAngle() > angle(leftJoystickX, leftJoystickY)) wheel.setTurn(-1);
-      else if (wheel.getTurnAngle() < angle(leftJoystickX, leftJoystickY)) wheel.setTurn(1);
+      wheel.setTargetAngle(angle(leftJoystickX, leftJoystickY));
     });
     backWheelGroup.forEach(wheel -> {
       wheel.setSpeed(throttle);
-      if (wheel.getTurnAngle() > angle(rightJoystickX, rightJoystickY)) wheel.setTurn(-1);
-      else if (wheel.getTurnAngle() < angle(rightJoystickX, rightJoystickY)) wheel.setTurn(1);
+      wheel.setTargetAngle(angle(rightJoystickX, rightJoystickY));
     });
   }
 
