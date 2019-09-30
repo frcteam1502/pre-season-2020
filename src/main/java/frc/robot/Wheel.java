@@ -10,13 +10,11 @@ package frc.robot;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
-/**
- * Add your docs here.
- */
 public class Wheel {
     
-    public CANSparkMax turnMotor, moveMotor;
-    public CANEncoder turnEncoder, moveEncoder;
+    CANSparkMax turnMotor, moveMotor;
+    CANEncoder turnEncoder, moveEncoder;
+    PIDController turnPID, movePID;
 
     Wheel(CANSparkMax turnMotor, CANSparkMax moveMotor) {
         this.turnMotor = turnMotor;
@@ -25,7 +23,15 @@ public class Wheel {
         moveEncoder = new CANEncoder(moveMotor);
     }
 
-    public double turnEncAngle() {
+    public void setSpeed(double power) {
+        this.moveMotor.set(power); // https://stackify.com/oop-concept-for-beginners-what-is-encapsulation/
+    }
+
+    public void setTurn(double power) {
+        this.turnMotor.set(power);
+    }
+
+    public double getTurnAngle() {
         return (turnEncoder.getPosition() / (double) turnEncoder.getCPR() * 360);
     }
 }

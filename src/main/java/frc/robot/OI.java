@@ -22,7 +22,7 @@ import frc.robot.subsystems.LinearSlide.Level;
  */
 
 public class OI {
-  	public Joystick leftJoystick = new Joystick(RobotMap.LEFT_JOYSTICK);
+  public Joystick leftJoystick = new Joystick(RobotMap.LEFT_JOYSTICK);
 	public Joystick rightJoystick = new Joystick(RobotMap.RIGHT_JOYSTICK);
 	public XboxController manipJoystick = new XboxController(RobotMap.MANIP_JOYSTICK);
 	Button dpUp = new DPadButton(manipJoystick, Direction.Up);

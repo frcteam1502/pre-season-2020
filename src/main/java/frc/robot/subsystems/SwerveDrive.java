@@ -16,28 +16,50 @@ import frc.robot.Wheel;
 public class SwerveDrive extends Subsystem {
 
   ArrayList<Wheel> driveTrain;
+  ArrayList<Wheel> frontWheelGroup;
+  ArrayList<Wheel> backWheelGroup;
 
   public SwerveDrive(Wheel... driveTrain) {
     this.driveTrain = new ArrayList<Wheel>(Arrays.asList(driveTrain));
   }
 
-  public void moveByRelative(double moveSpeed, double rotateSpeed) {
-    driveTrain.forEach(x -> {
-      x.moveMotor.set(moveSpeed);
-      x.turnMotor.set(rotateSpeed); 
+  public SwerveDrive(Wheel frontRight, Wheel backRight, Wheel frontLeft, Wheel backLeft) {
+    frontWheelGroup = new ArrayList<Wheel>(Arrays.asList(frontRight, frontLeft));
+    backWheelGroup = new ArrayList<Wheel>(Arrays.asList(backRight, backLeft));
+  }
+
+  /*
+    This move module combines the intuitive nature of the absolute one, the full 
+    utility of the relative one, but now it seperates the front and back sets of
+    tires to give added mobility
+    it averages out the x and y of two joysticks to give a seemingly tank drive
+    like drive train, but seperated differently
+  */
+  public void moveWIPAbs(double throttle, double rightJoystickX, double rightJoystickY, double leftJoystickX, double leftJoystickY) {
+    frontWheelGroup.forEach(wheel -> {
+      wheel.setSpeed(throttle);
+      if (wheel.getTurnAngle() > angle(leftJoystickX, leftJoystickY)) wheel.setTurn(-1);
+      else if (wheel.getTurnAngle() < angle(leftJoystickX, leftJoystickY)) wheel.setTurn(1);
+    });
+    backWheelGroup.forEach(wheel -> {
+      wheel.setSpeed(throttle);
+      if (wheel.getTurnAngle() > angle(rightJoystickX, rightJoystickY)) wheel.setTurn(-1);
+      else if (wheel.getTurnAngle() < angle(rightJoystickX, rightJoystickY)) wheel.setTurn(1);
     });
   }
 
-  public void moveByAngle(double speed, double xLen, double yLen) {
-    driveTrain.forEach(x -> {
-      x.moveMotor.set(speed);
-      if (x.turnEncAngle() > angle(xLen, yLen)) x.turnMotor.set(-1);
-      else if (x.turnEncAngle() < angle(xLen, yLen)) x.turnMotor.set(1);
-    });
+  /**
+   * right joystick distance from center controls speed
+   * right joystick angle controls angle of the wheels
+   * left joystick x axis rotates robot but the robot always keeps
+   * "forward" as the same direction no matter which way it faces.
+   */
+  public void moveHeadless() {
+
   }
 
-  public double angle(double xLen, double yLen) {
-    return Math.atan(yLen / xLen) * 180 / Math.PI;
+  public double angle(double joystickX, double joystickY) {
+    return Math.atan2(joystickY, joystickX) * 180 / Math.PI;
   }
 
   @Override

@@ -11,6 +11,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.SPI.Port;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -40,8 +42,9 @@ public class RobotMap {
   // Just random test stuff, to be commented out here, oi, and robot
   public static final CANSparkMax LINEAR_SLIDE_LEFT = new CANSparkMax(4, MotorType.kBrushless);
   public static final CANSparkMax LINEAR_SLIDE_RIGHT = new CANSparkMax(5, MotorType.kBrushless);
-  
-  // Peripherals
+
+  // Sensors
+  public static final ADXRS450_Gyro GYRO = new ADXRS450_Gyro(Port.kOnboardCS0);
   public static final UsbCamera CAMERA = new UsbCamera("USB Camera 0", 0);
 
 }
