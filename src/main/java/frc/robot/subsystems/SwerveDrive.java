@@ -28,13 +28,10 @@ public class SwerveDrive extends Subsystem {
     backWheelGroup = new ArrayList<Wheel>(Arrays.asList(backRight, backLeft));
   }
   
-  public void moveWIPAbs(double throttle, double rightJoystickX, double rightJoystickY, double leftJoystickX, double leftJoystickY) {
-    frontWheelGroup.forEach(wheel -> {
-      wheel.setSpeed(throttle);
-      wheel.setTargetAngle(angle(leftJoystickX, leftJoystickY));
-    });
-    backWheelGroup.forEach(wheel -> {
-      wheel.setSpeed(throttle);
+  public void moveWIPAbs(double rightJoystickX, double rightJoystickY, double leftJoystickX, double leftJoystickY) {
+    double speed = Math.sqrt((rightJoystickX * rightJoystickX) + (rightJoystickY * rightJoystickY));
+    driveTrain.forEach(wheel -> {
+      wheel.setSpeed(speed);
       wheel.setTargetAngle(angle(rightJoystickX, rightJoystickY));
     });
   }
