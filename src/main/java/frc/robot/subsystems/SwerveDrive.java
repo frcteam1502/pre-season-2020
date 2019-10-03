@@ -7,47 +7,54 @@
 
 package frc.robot.subsystems;
 
+import java.util.stream.Collectors;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.RobotMap;
+import frc.robot.Vector;
 import frc.robot.Wheel;
 
 public class SwerveDrive extends Subsystem {
 
-  ArrayList<Wheel> driveTrain;
-  ArrayList<Wheel> frontWheelGroup;
-  ArrayList<Wheel> backWheelGroup;
+  Wheel[] wheels;
 
-  public SwerveDrive(Wheel... driveTrain) {
-    this.driveTrain = new ArrayList<Wheel>(Arrays.asList(driveTrain));
-  }
-
-  public SwerveDrive(Wheel frontRight, Wheel backRight, Wheel frontLeft, Wheel backLeft) {
-    frontWheelGroup = new ArrayList<Wheel>(Arrays.asList(frontRight, frontLeft));
-    backWheelGroup = new ArrayList<Wheel>(Arrays.asList(backRight, backLeft));
-  }
-  
-  public void moveWIPAbs(double rightJoystickX, double rightJoystickY, double leftJoystickX, double leftJoystickY) {
-    double speed = Math.sqrt((rightJoystickX * rightJoystickX) + (rightJoystickY * rightJoystickY));
-    driveTrain.forEach(wheel -> {
-      wheel.setSpeed(speed);
-      wheel.setTargetAngle(angle(rightJoystickX, rightJoystickY));
-    });
+  public SwerveDrive(Wheel... wheels) {
+    this.wheels = wheels;
   }
 
   /**
-   * right joystick distance from center controls speed
-   * right joystick angle controls angle of the wheels
-   * left joystick x axis rotates robot but the robot always keeps
-   * "forward" as the same direction no matter which way it faces.
+   * Right joystick distance from center controls speed,
+   * right joystick angle controls angle of the wheels,
+   * left joystick x axis rotates robot.
    */
-  public void moveHeadless() {
-
+  public void moveMode2(double x, double y, double turn) {
+    Vector translationVector = new Vector(x, y);
+    double largestSpeed = 0;
+    ArrayList<Vector> wheelVelocities = new ArrayList<>();
+    for (int i = 0; i < wheels.length; i++) {
+      Vector rotationVector = wheels[i].turnRightVector.multiply(turn);
+      Vector resultant = translationVector.add(rotationVector);
+      largestSpeed = Math.min(resultant.magnitude(), largestSpeed);
+      wheelVelocities.add(resultant);
+    }
+    if (largestSpeed > 1) {
+      double scalar = 1 / largestSpeed;
+      wheelVelocities = new ArrayList<>(wheelVelocities.stream().map(vel -> vel.multiply(scalar)).collect(Collectors.toList()));
+    }
+    for (int i = 0; i < wheels.length; i++) {
+      wheels[i].setTargetVelocity(wheelVelocities.get(i));
+    }
   }
 
-  public double angle(double joystickX, double joystickY) {
-    return Math.atan2(joystickY, joystickX) * 180 / Math.PI;
+  /**
+   * Just like {@link frc.robot.subsystems.SwerveDrive#moveMode2}
+   * but keeps the robot's heading away from the user at all times.
+   */
+  public void moveHeadless(double x, double y, double turn) {
+    Vector moveVector = new Vector(x, y);
+    moveVector = moveVector.rotate(-RobotMap.GYRO.getAngle());
+    moveMode2(moveVector.x, moveVector.y, turn);
   }
 
   @Override

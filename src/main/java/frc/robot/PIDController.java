@@ -19,7 +19,7 @@ public class PIDController {
   public double D;
   ArrayList<Point> points = new ArrayList<Point>();
 
-  public PIDController(final double p, final double i, final double d) {
+  public PIDController(double p, double i, double d) {
     P = p;
     I = i;
     D = d;

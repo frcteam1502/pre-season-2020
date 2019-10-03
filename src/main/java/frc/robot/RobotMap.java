@@ -29,10 +29,10 @@ public class RobotMap {
   public static final CANSparkMax BACK_LEFT = new CANSparkMax(3, MotorType.kBrushed);
 
   // Swerve Drivetrain sparks. using wheel to condense into one reference
-  public static final Wheel FRONT_RIGHT_SWERVE = new Wheel(new CANSparkMax(4, MotorType.kBrushed), new CANSparkMax(5, MotorType.kBrushed));
-  public static final Wheel BACK_RIGHT_SWERVE = new Wheel(new CANSparkMax(6, MotorType.kBrushed), new CANSparkMax(7, MotorType.kBrushed));
-  public static final Wheel FRONT_LEFT_SWERVE = new Wheel(new CANSparkMax(8, MotorType.kBrushed), new CANSparkMax(9, MotorType.kBrushed));
-  public static final Wheel BACK_LEFT_SWERVE = new Wheel(new CANSparkMax(10, MotorType.kBrushed), new CANSparkMax(11, MotorType.kBrushed));
+  public static final Wheel FRONT_RIGHT_SWERVE = new Wheel(new CANSparkMax(4, MotorType.kBrushed), new CANSparkMax(5, MotorType.kBrushed), new Vector(1, -1));
+  public static final Wheel BACK_RIGHT_SWERVE = new Wheel(new CANSparkMax(6, MotorType.kBrushed), new CANSparkMax(7, MotorType.kBrushed), new Vector(-1, -1));
+  public static final Wheel FRONT_LEFT_SWERVE = new Wheel(new CANSparkMax(8, MotorType.kBrushed), new CANSparkMax(9, MotorType.kBrushed), new Vector(1, 1));
+  public static final Wheel BACK_LEFT_SWERVE = new Wheel(new CANSparkMax(10, MotorType.kBrushed), new CANSparkMax(11, MotorType.kBrushed), new Vector(-1, 1));
 
   // Controllers
   public static final int LEFT_JOYSTICK = 0;
