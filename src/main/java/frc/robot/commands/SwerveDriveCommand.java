@@ -26,7 +26,7 @@ public class SwerveDriveCommand extends Command {
   protected void execute() {
     Joystick right = Robot.m_oi.rightJoystick;
     Joystick left = Robot.m_oi.leftJoystick;
-    Robot.swerveDrive.moveMode2(right.getX(), right.getY(), left.getX());
+    Robot.swerveDrive.moveHeadless(right.getX(), right.getY(), left.getX());
   }
 
   // Make this return true when this Command no longer needs to run execute()
