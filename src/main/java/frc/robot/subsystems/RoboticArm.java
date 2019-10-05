@@ -8,6 +8,11 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.PIDController;
+
+import java.util.function.UnaryOperator;
+
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
 /**
@@ -19,25 +24,70 @@ public class RoboticArm extends Subsystem {
   private int armLength, foreArmLength;
   private int min, max;
   CANSparkMax armMotor, forearmMotor;
+  CANEncoder armEnc, forearmEnc;
+  PIDController armPID, forearmPID;
+  int[] endPoint = new int[2];
 
   public RoboticArm(int armLength, int forearmLength, CANSparkMax armMotor, CANSparkMax forearmMotor) {
     this.armLength = armLength;
     this.foreArmLength = forearmLength;
     this.armMotor = armMotor;
+    armEnc = new CANEncoder(armMotor);
+    armPID = new PIDController(1e-5, 1e-8, 1e-2);
+    forearmPID = new PIDController(1e-5, 1e-8, 1e-2);
     this.forearmMotor = forearmMotor;
+    forearmEnc = new CANEncoder(forearmMotor);
     min = armLength - forearmLength;
     max = armLength + forearmLength;
   }
 
-  public double[] run(double[] pos) throws ArithmeticException {
-    double distance = Math.sqrt(pos[0] * pos[0] + pos[1] * pos[1]);
+  public void setPositionX(int difference) {
+    endPoint[0] += difference;
+  }
+
+  public void setPositionY(int difference) {
+    endPoint[1] += difference;
+  }
+
+  private double getMotorAngle(CANEncoder motor) {
+    return (motor.getPosition() / (double) motor.getCPR() * 360);
+  }
+
+  public void run() {
+    double armEncAngle = getMotorAngle(armEnc);
+    double forearmEncAngle = getMotorAngle(forearmEnc);
+    double[] angles = getAngles();
+    armPID.input(subtractAngles(angles[0], armEncAngle));
+    forearmPID.input(subtractAngles(angles[1], forearmEncAngle));
+    armMotor.set(armPID.getCorrection());
+    forearmMotor.set(forearmPID.getCorrection());
+  }
+
+  private double subtractAngles(double target, double current) {
+    UnaryOperator<Double> constrainAngleToPositive = a -> {
+        a = 360 -(-a % 360);
+        a = a % 360;
+        return a;
+    };
+    double absoluteDifference = constrainAngleToPositive.apply(target - current);
+    return absoluteDifference > 180 ? absoluteDifference - 360 : absoluteDifference;
+}
+
+
+  /* 
+   * @param pos Position of both arm end points
+   * @throws ArithmeticException a2 could be undefined
+   * @returns angles Angle of the arm in relation to the robot and angle of the forearm in relation to the arm
+   **/
+  private double[] getAngles() throws ArithmeticException {
+    double distance = Math.sqrt(endPoint[0] * endPoint[0] + endPoint[1] * endPoint[1]);
     double distMultiplier = 1;
     if (distance > max)
         distMultiplier = max / distance;
     if (distance < min)
         distMultiplier = min / distance;
     distance *= distMultiplier;
-    double[] endPosition = { pos[0] * distMultiplier, pos[1] * distMultiplier };
+    double[] endPosition = { endPoint[0] * distMultiplier, endPoint[1] * distMultiplier };
 
     double a1 = Math.atan2(endPosition[1], endPosition[0]);
     double secondAngle = Math.asin((endPosition[1] * endPosition[1] + endPosition[0] * endPosition[0]
