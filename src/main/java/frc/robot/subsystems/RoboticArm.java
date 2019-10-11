@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.PIDController;
+import frc.robot.commands.RoboticArmMoveCommand;
 
 import java.util.function.UnaryOperator;
 
@@ -26,7 +27,7 @@ public class RoboticArm extends Subsystem {
   CANSparkMax armMotor, forearmMotor;
   CANEncoder armEnc, forearmEnc;
   PIDController armPID, forearmPID;
-  int[] endPoint = new int[2];
+  int[] endPoint = {0, 0};
 
   public RoboticArm(int armLength, int forearmLength, CANSparkMax armMotor, CANSparkMax forearmMotor) {
     this.armLength = armLength;
@@ -39,6 +40,14 @@ public class RoboticArm extends Subsystem {
     forearmEnc = new CANEncoder(forearmMotor);
     min = armLength - forearmLength;
     max = armLength + forearmLength;
+  }
+  
+  public void incrementPositionX(int amount) {
+    endPoint[0] += amount;
+  }
+
+  public void incrementPositionY(int amount) {
+    endPoint[1] += amount;
   }
 
   public void setPositionX(int difference) {
@@ -102,7 +111,6 @@ public class RoboticArm extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new RoboticArmMoveCommand());
   }
 }
