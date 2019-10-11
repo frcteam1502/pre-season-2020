@@ -24,10 +24,10 @@ public class RoboticArm extends Subsystem {
   // here. Call these from Commands.
   private int armLength, foreArmLength;
   private int min, max;
-  CANSparkMax armMotor, forearmMotor;
-  CANEncoder armEnc, forearmEnc;
-  PIDController armPID, forearmPID;
-  int[] endPoint = {0, 0};
+  private CANSparkMax armMotor, forearmMotor;
+  private CANEncoder armEnc, forearmEnc;
+  private PIDController armPID, forearmPID;
+  private int[] endPoint = {0, 0};
 
   public RoboticArm(int armLength, int forearmLength, CANSparkMax armMotor, CANSparkMax forearmMotor) {
     this.armLength = armLength;
@@ -41,21 +41,27 @@ public class RoboticArm extends Subsystem {
     min = armLength - forearmLength;
     max = armLength + forearmLength;
   }
+
+  private double[] getAnglesAbs(int[] endPoint) {
+    double[] angles;
+    if (endPoint[0] < 0) {
+      endPoint[0] = Math.abs(endPoint[0]);
+      angles = getAngles(endPoint);
+      angles[0] = Math.abs(angles[0] - 360);
+      angles[1] = Math.abs(angles[1] - 360);
+    }
+    else angles = getAngles(endPoint);
+    return angles;
+  }
   
-  public void incrementPositionX(int amount) {
-    endPoint[0] += amount;
+  public void changeEndPoint(int x, int y) {
+    endPoint[0] += x;
+    endPoint[1] += y;
   }
 
-  public void incrementPositionY(int amount) {
-    endPoint[1] += amount;
-  }
-
-  public void setPositionX(int difference) {
-    endPoint[0] += difference;
-  }
-
-  public void setPositionY(int difference) {
-    endPoint[1] += difference;
+  public void setEndPoint(int x, int y) {
+    endPoint[0] = x;
+    endPoint[1] = y;
   }
 
   private double getMotorAngle(CANEncoder motor) {
@@ -65,7 +71,7 @@ public class RoboticArm extends Subsystem {
   public void run() {
     double armEncAngle = getMotorAngle(armEnc);
     double forearmEncAngle = getMotorAngle(forearmEnc);
-    double[] angles = getAngles();
+    double[] angles = getAnglesAbs(endPoint);
     armPID.input(subtractAngles(angles[0], armEncAngle));
     forearmPID.input(subtractAngles(angles[1], forearmEncAngle));
     armMotor.set(armPID.getCorrection());
@@ -88,7 +94,7 @@ public class RoboticArm extends Subsystem {
    * @throws ArithmeticException a2 could be undefined
    * @returns angles Angle of the arm in relation to the robot and angle of the forearm in relation to the arm
    **/
-  private double[] getAngles() throws ArithmeticException {
+  private double[] getAngles(int[] endPoint) throws ArithmeticException {
     double distance = Math.sqrt(endPoint[0] * endPoint[0] + endPoint[1] * endPoint[1]);
     double distMultiplier = 1;
     if (distance > max)

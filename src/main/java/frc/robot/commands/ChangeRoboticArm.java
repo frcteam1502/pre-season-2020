@@ -10,12 +10,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class IncrementRoboticArmY extends Command {
+public class ChangeRoboticArm extends Command {
 
-  int amount;
+  int x, y;
 
-  public IncrementRoboticArmY(int amount) {
-    this.amount = amount;
+  public ChangeRoboticArm(int x, int y) {
+    this.x = x;
+    this.y = y;
     requires(Robot.arm);
   }
 
@@ -27,7 +28,7 @@ public class IncrementRoboticArmY extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-      Robot.arm.incrementPositionY(amount);
+      Robot.arm.changeEndPoint(x, y);
   }
 
   // Make this return true when this Command no longer needs to run execute()
