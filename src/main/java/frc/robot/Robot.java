@@ -12,8 +12,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.LinearSlideMoveCommand;
+import frc.robot.commands.RoboticArmMoveCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LinearSlide;
+import frc.robot.subsystems.RoboticArm;
 import frc.robot.subsystems.SwerveDrive;
 
 public class Robot extends TimedRobot {
@@ -21,18 +24,22 @@ public class Robot extends TimedRobot {
   public static Drivetrain drivetrain;
   public static LinearSlide slide;
   public static OI m_oi;
-  public static SwerveDrive swerveDrive;  
+  public static SwerveDrive swerveDrive;
+  public static RoboticArm arm;
+  LinearSlideMoveCommand linearSlideMove = new LinearSlideMoveCommand();
+  RoboticArmMoveCommand armMove = new RoboticArmMoveCommand();
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   @Override
   public void robotInit() {
     drivetrain = new Drivetrain(RobotMap.FRONT_RIGHT, RobotMap.BACK_RIGHT, RobotMap.FRONT_LEFT, RobotMap.BACK_LEFT);
-    // test stuff
+    arm = new RoboticArm(2, 1, RobotMap.ARM_MOTOR, RobotMap.FOREARM_MOTOR);
     slide = new LinearSlide(RobotMap.LINEAR_SLIDE_LEFT, RobotMap.LINEAR_SLIDE_RIGHT);
     swerveDrive = new SwerveDrive(RobotMap.FRONT_RIGHT_SWERVE, RobotMap.BACK_RIGHT_SWERVE, RobotMap.FRONT_LEFT_SWERVE, RobotMap.BACK_LEFT_SWERVE);
     m_oi = new OI();
-
+    linearSlideMove.start();
+    armMove.start();
     SmartDashboard.putData("Auto mode", m_chooser);
   }
 
