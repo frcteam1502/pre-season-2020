@@ -2,13 +2,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.subsystems.LinearSlide.Level;
 
-public class LinearSlideCommand extends Command {
+public class LinearSlideMoveCommand extends Command {
 
-  Level place;
-  public LinearSlideCommand(Level place) {
-    this.place = place;
+  public LinearSlideMoveCommand() {
     requires(Robot.slide);
   }
 
@@ -18,12 +15,12 @@ public class LinearSlideCommand extends Command {
 
   @Override
   protected void execute() {
-    Robot.slide.setPlace(place);
+    Robot.slide.move();
   }
 
   @Override
   protected boolean isFinished() {
-    return true;
+    return false;
   }
 
   @Override
