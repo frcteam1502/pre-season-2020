@@ -46,8 +46,8 @@ public class RoboticArm extends Subsystem {
    */
 
   public void initRoboticArm() {
-    setEndPoint(0, foreArmLength + armLength);
     armEnc.setPosition(0);
+    forearmEnc.setPosition(angleToEncoderVal(forearmEnc, -90));
   }
 
   /**
@@ -80,6 +80,10 @@ public class RoboticArm extends Subsystem {
 
   private double getMotorAngle(CANEncoder motor) {
     return (motor.getPosition() % 360 / (double) motor.getCPR() * 360);
+  }
+  
+  private double angleToEncoderVal(CANEncoder motor, double angle) {
+    return angle / 360 * motor.getCPR();
   }
 
   /**

@@ -54,7 +54,7 @@ public class LinearSlide extends Subsystem {
     rightMotor.set(rightPID.getCorrection());
   }
 
-  public void setPlace(Level place) {
+  public void setLevel(Level place) {
     currentLevel = place;
   }
 

@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.DPadButton.Direction;
-import frc.robot.commands.ChangeRoboticArm;
 import frc.robot.commands.LinearSlideCommand;
+import frc.robot.commands.RoboticArmMoveByCommand;
 import frc.robot.subsystems.LinearSlide.Level;
 
 /**
@@ -42,10 +42,11 @@ public class OI {
 				Robot.slide.toggle();
 			}
 		});
-		dpUp.whenPressed(new ChangeRoboticArm(0, 1));
-		dpDown.whenPressed(new ChangeRoboticArm(0, -1));
-		dpRight.whenPressed(new ChangeRoboticArm(1, 0));
-		dpLeft.whenPressed(new ChangeRoboticArm(-1, 0));
+		dpUp.whenPressed(new RoboticArmMoveByCommand(0, 1));
+		dpDown.whenPressed(new RoboticArmMoveByCommand(0, -1));
+		dpRight.whenPressed(new RoboticArmMoveByCommand(1, 0));
+		dpLeft.whenPressed(new RoboticArmMoveByCommand(-1, 0));
+		// change that
 		dpDown.whenPressed(new LinearSlideCommand(Level.Bottom));
 		dpUp.whenPressed(new LinearSlideCommand(Level.Top));
 	}

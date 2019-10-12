@@ -14,11 +14,11 @@ public class LinearSlideCommand extends Command {
 
   @Override
   protected void initialize() {
+    Robot.slide.setLevel(place);
   }
 
   @Override
   protected void execute() {
-    Robot.slide.setPlace(place);
   }
 
   @Override
