@@ -16,9 +16,6 @@ import java.util.function.UnaryOperator;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
-/**
- * Add your docs here.
- */
 public class RoboticArm extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
@@ -27,7 +24,7 @@ public class RoboticArm extends Subsystem {
   private CANSparkMax armMotor, forearmMotor;
   private CANEncoder armEnc, forearmEnc;
   private PIDController armPID, forearmPID;
-  private int[] endPoint = {0, 0};
+  private int[] endPoint = {0,0};
 
   public RoboticArm(int armLength, int forearmLength, CANSparkMax armMotor, CANSparkMax forearmMotor) {
     this.armLength = armLength;
@@ -41,6 +38,23 @@ public class RoboticArm extends Subsystem {
     min = armLength - forearmLength;
     max = armLength + forearmLength;
   }
+
+  /**
+   * In progress.
+   * hope is that it raises the arm to its max point on the y axis, and then sets
+   * the encoder values to 0 from there.
+   */
+
+  public void initRoboticArm() {
+    setEndPoint(0, foreArmLength + armLength);
+    armEnc.setPosition(0);
+  }
+
+  /**
+   * used for an arm with 360 degree rotation on the forearm
+   * @param endPoint
+   * @return angles flipped over the y axis
+   */
 
   private double[] getAnglesAbs(int[] endPoint) {
     double[] angles;
@@ -65,8 +79,13 @@ public class RoboticArm extends Subsystem {
   }
 
   private double getMotorAngle(CANEncoder motor) {
-    return (motor.getPosition() / (double) motor.getCPR() * 360);
+    return (motor.getPosition() % 360 / (double) motor.getCPR() * 360);
   }
+
+  /**
+   * gets correction of target angle - current angle
+   * and sets motor speed
+   */
 
   public void run() {
     double armEncAngle = getMotorAngle(armEnc);
@@ -78,6 +97,12 @@ public class RoboticArm extends Subsystem {
     forearmMotor.set(forearmPID.getCorrection());
   }
 
+  /**
+   * -180 =< val =< 180
+   * @param target angle you are going to
+   * @param current angle you are at
+   * @return target - current
+   */
   private double subtractAngles(double target, double current) {
     UnaryOperator<Double> constrainAngleToPositive = a -> {
         a = 360 -(-a % 360);
@@ -88,12 +113,11 @@ public class RoboticArm extends Subsystem {
     return absoluteDifference > 180 ? absoluteDifference - 360 : absoluteDifference;
 }
 
-
-  /* 
+  /**
    * @param pos Position of both arm end points
    * @throws ArithmeticException a2 could be undefined
    * @returns angles Angle of the arm in relation to the robot and angle of the forearm in relation to the arm
-   **/
+   */
   private double[] getAngles(int[] endPoint) throws ArithmeticException {
     double distance = Math.sqrt(endPoint[0] * endPoint[0] + endPoint[1] * endPoint[1]);
     double distMultiplier = 1;
