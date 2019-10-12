@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.PIDController;
+import frc.robot.Vector;
 import frc.robot.commands.RoboticArmMoveCommand;
 
 import java.util.function.UnaryOperator;
@@ -24,7 +25,7 @@ public class RoboticArm extends Subsystem {
   private CANSparkMax armMotor, forearmMotor;
   private CANEncoder armEnc, forearmEnc;
   private PIDController armPID, forearmPID;
-  private int[] endPoint = {0,0};
+  private Vector endPoint = new Vector(0,0);
 
   public RoboticArm(int armLength, int forearmLength, CANSparkMax armMotor, CANSparkMax forearmMotor) {
     this.armLength = armLength;
@@ -55,27 +56,27 @@ public class RoboticArm extends Subsystem {
    * @param endPoint
    * @return angles flipped over the y axis
    */
-
-  private double[] getAnglesAbs(int[] endPoint) {
+  private double[] getIdealArmAngles(Vector endPoint) {
     double[] angles;
-    if (endPoint[0] < 0) {
-      endPoint[0] = Math.abs(endPoint[0]);
-      angles = getAngles(endPoint);
-      angles[0] = Math.abs(angles[0] - 360);
-      angles[1] = Math.abs(angles[1] - 360);
+    if (endPoint.x < 0) {
+      angles = getInvertedAngles(endPoint);
     }
     else angles = getAngles(endPoint);
     return angles;
   }
+
+  private double[] getInvertedAngles(Vector endPoint) {
+    double[] nonInverted = getAngles(endPoint);
+    double angleToArm = endPoint.angle();
+    return new double[] {2 * angleToArm - nonInverted[0], 180 - nonInverted[1]};
+  }
   
   public void changeEndPoint(int x, int y) {
-    endPoint[0] += x;
-    endPoint[1] += y;
+    endPoint = endPoint.add(new Vector(x, y));
   }
 
   public void setEndPoint(int x, int y) {
-    endPoint[0] = x;
-    endPoint[1] = y;
+    endPoint = new Vector(x, y);
   }
 
   private double getMotorAngle(CANEncoder motor) {
@@ -94,7 +95,7 @@ public class RoboticArm extends Subsystem {
   public void run() {
     double armEncAngle = getMotorAngle(armEnc);
     double forearmEncAngle = getMotorAngle(forearmEnc);
-    double[] angles = getAnglesAbs(endPoint);
+    double[] angles = getIdealArmAngles(endPoint);
     armPID.input(subtractAngles(angles[0], armEncAngle));
     forearmPID.input(subtractAngles(angles[1], forearmEncAngle));
     armMotor.set(armPID.getCorrection());
@@ -122,18 +123,18 @@ public class RoboticArm extends Subsystem {
    * @throws ArithmeticException a2 could be undefined
    * @returns angles Angle of the arm in relation to the robot and angle of the forearm in relation to the arm
    */
-  private double[] getAngles(int[] endPoint) throws ArithmeticException {
-    double distance = Math.sqrt(endPoint[0] * endPoint[0] + endPoint[1] * endPoint[1]);
+  private double[] getAngles(Vector endPoint) throws ArithmeticException {
+    double distance = Math.sqrt(endPoint.x * endPoint.x + endPoint.y * endPoint.y);
     double distMultiplier = 1;
     if (distance > max)
         distMultiplier = max / distance;
     if (distance < min)
         distMultiplier = min / distance;
     distance *= distMultiplier;
-    double[] endPosition = { endPoint[0] * distMultiplier, endPoint[1] * distMultiplier };
+    Vector endPosition = endPoint.multiply(distMultiplier);
 
-    double a1 = Math.atan2(endPosition[1], endPosition[0]);
-    double secondAngle = Math.asin((endPosition[1] * endPosition[1] + endPosition[0] * endPosition[0]
+    double a1 = Math.atan2(endPosition.y, endPosition.x);
+    double secondAngle = Math.asin((endPosition.y * endPosition.y + endPosition.x * endPosition.x
             - armLength * armLength - foreArmLength * foreArmLength) / 2 / armLength / foreArmLength);
     double a2 = Math.asin(foreArmLength * Math.cos(secondAngle) / distance);
     double firstAngle = a1 + a2;
