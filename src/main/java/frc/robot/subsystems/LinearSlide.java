@@ -57,7 +57,7 @@ public class LinearSlide extends Subsystem {
   public void setLevel(Level place) {
     currentLevel = place;
   }
-
+  
   public void toggle() {
     currentType = currentType != CARGO ? CARGO : HATCH;
   }

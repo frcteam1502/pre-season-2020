@@ -43,8 +43,8 @@ public class RoboticArm extends Subsystem {
   /**
    * @deprecated in progress.
    * <br></br>
-   * {@code when arm is straight, arm angle = 0, forearm angle = 90};
-   * @see com.revrobotics.CANEncoder
+   * when arm is straight, arm angle = 0, forearm angle = 90
+   * @see com.revrobotics.CANEncoder#setPosition(double)
    */
   public void initRoboticArm() {
     armEnc.setPosition(0);
@@ -82,6 +82,7 @@ public class RoboticArm extends Subsystem {
   public void changeEndPoint(int x, int y) {
     endPoint = endPoint.add(new Vector(x, y));
   }
+
   /**
    * @param x new x value of the endpoint
    * @param y new y value of the endpoint
@@ -99,7 +100,6 @@ public class RoboticArm extends Subsystem {
   }
 
   /**
-   * does <br>
    * <ul>
    *  <li> gets motor angle of forearm and arm
    *  <li> compares with idea angles
@@ -117,7 +117,7 @@ public class RoboticArm extends Subsystem {
   }
 
   /**
-   * -180 =< val =< 180
+   * <h3><b>Range</b></h3> -180 =< val =< 180
    * @param target angle you are going to
    * @param current angle you are at
    * @return target - current
