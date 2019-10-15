@@ -41,11 +41,11 @@ public class RoboticArm extends Subsystem {
   }
 
   /**
-   * In progress.
-   * hope is that it raises the arm to its max point on the y axis, and then sets
-   * the encoder values to 0 from there.
+   * @deprecated in progress.
+   * <br></br>
+   * {@code when arm is straight, arm angle = 0, forearm angle = 90};
+   * @see com.revrobotics.CANEncoder
    */
-
   public void initRoboticArm() {
     armEnc.setPosition(0);
     forearmEnc.setPosition(angleToEncoderVal(forearmEnc, -90));
@@ -64,17 +64,28 @@ public class RoboticArm extends Subsystem {
     else angles = getAngles(endPoint);
     return angles;
   }
-
+  /**
+   * @param endPoint
+   * @return angle from x axis to arm - non-inverted angle of the arm
+   *  <li> the opposite angle of the non-inverted forearm angle
+   */
   private double[] getInvertedAngles(Vector endPoint) {
     double[] nonInverted = getAngles(endPoint);
     double angleToArm = endPoint.angle();
     return new double[] {2 * angleToArm - nonInverted[0], 180 - nonInverted[1]};
   }
   
+  /**
+   * @param x change of the endpoint on the x axis
+   * @param y change of the endpoint on the y axis
+   */
   public void changeEndPoint(int x, int y) {
     endPoint = endPoint.add(new Vector(x, y));
   }
-
+  /**
+   * @param x new x value of the endpoint
+   * @param y new y value of the endpoint
+   */
   public void setEndPoint(int x, int y) {
     endPoint = new Vector(x, y);
   }
@@ -88,10 +99,13 @@ public class RoboticArm extends Subsystem {
   }
 
   /**
-   * gets correction of target angle - current angle
-   * and sets motor speed
+   * does <br>
+   * <ul>
+   *  <li> gets motor angle of forearm and arm
+   *  <li> compares with idea angles
+   *  <li> uses PID Controller to get motor speed
+   * </ul>
    */
-
   public void run() {
     double armEncAngle = getMotorAngle(armEnc);
     double forearmEncAngle = getMotorAngle(forearmEnc);
@@ -119,9 +133,9 @@ public class RoboticArm extends Subsystem {
 }
 
   /**
-   * @param pos Position of both arm end points
-   * @throws ArithmeticException a2 could be undefined
-   * @returns angles Angle of the arm in relation to the robot and angle of the forearm in relation to the arm
+   * @param endPoint final destination of arm
+   * @exception ArithmeticException a2 could be undefined
+   * @return <b>angles</b>: Angle of the arm in relation to the robot and angle of the forearm in relation to the arm
    */
   private double[] getAngles(Vector endPoint) throws ArithmeticException {
     double distance = Math.sqrt(endPoint.x * endPoint.x + endPoint.y * endPoint.y);
