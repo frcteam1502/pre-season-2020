@@ -92,7 +92,7 @@ public class RoboticArm extends Subsystem {
   }
 
   private double getMotorAngle(CANEncoder motor) {
-    return (motor.getPosition() % 360 / (double) motor.getCPR() * 360);
+    return (motor.getPosition() % motor.getCPR() / (double) motor.getCPR() * 360);
   }
   
   private double angleToEncoderVal(CANEncoder motor, double angle) {

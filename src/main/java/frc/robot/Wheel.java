@@ -77,6 +77,6 @@ public class Wheel {
     }
 
     private double getTurnAngle() {
-        return (turnEncoder.getPosition() / (double) turnEncoder.getCPR() * 360);
+        return (turnEncoder.getPosition() % turnEncoder.getCPR() / (double) turnEncoder.getCPR() * 360);
     }
 }
