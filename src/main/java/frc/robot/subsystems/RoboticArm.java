@@ -9,8 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.PIDController;
-
-import java.util.function.UnaryOperator;
+import frc.robot.Vector;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -19,34 +18,33 @@ import com.revrobotics.CANSparkMax;
  * Add your docs here.
  */
 public class RoboticArm extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
-  private int armLength, foreArmLength;
-  private int min, max;
+
+  private int armLength, forearmLength;
+  private int minDistance, maxDistance;
   CANSparkMax armMotor, forearmMotor;
   CANEncoder armEnc, forearmEnc;
   PIDController armPID, forearmPID;
-  int[] endPoint = {0, 0};
+  public Vector targetPosition = new Vector(0, 0);
 
   public RoboticArm(int armLength, int forearmLength, CANSparkMax armMotor, CANSparkMax forearmMotor) {
     this.armLength = armLength;
-    this.foreArmLength = forearmLength;
+    this.forearmLength = forearmLength;
     this.armMotor = armMotor;
+    this.forearmMotor = forearmMotor;
     armEnc = new CANEncoder(armMotor);
     armPID = new PIDController(1e-5, 1e-8, 1e-2);
     forearmPID = new PIDController(1e-5, 1e-8, 1e-2);
-    this.forearmMotor = forearmMotor;
     forearmEnc = new CANEncoder(forearmMotor);
-    min = armLength - forearmLength;
-    max = armLength + forearmLength;
+    minDistance = armLength - forearmLength;
+    maxDistance = armLength + forearmLength;
   }
 
-  public void setPositionX(int difference) {
-    endPoint[0] += difference;
+  public void moveBy(Vector difference) {
+    targetPosition = targetPosition.add(difference);
   }
 
-  public void setPositionY(int difference) {
-    endPoint[1] += difference;
+  public void moveTo(Vector target) {
+    targetPosition = target;
   }
 
   private double getMotorAngle(CANEncoder motor) {
@@ -57,47 +55,34 @@ public class RoboticArm extends Subsystem {
     double armEncAngle = getMotorAngle(armEnc);
     double forearmEncAngle = getMotorAngle(forearmEnc);
     double[] angles = getAngles();
-    armPID.input(subtractAngles(angles[0], armEncAngle));
-    forearmPID.input(subtractAngles(angles[1], forearmEncAngle));
+    armPID.input(Vector.subtractAngles(angles[0], armEncAngle));
+    forearmPID.input(Vector.subtractAngles(angles[1], forearmEncAngle));
     armMotor.set(armPID.getCorrection());
     forearmMotor.set(forearmPID.getCorrection());
   }
 
-  private double subtractAngles(double target, double current) {
-    UnaryOperator<Double> constrainAngleToPositive = a -> {
-        a = 360 -(-a % 360);
-        a = a % 360;
-        return a;
-    };
-    double absoluteDifference = constrainAngleToPositive.apply(target - current);
-    return absoluteDifference > 180 ? absoluteDifference - 360 : absoluteDifference;
-}
-
-
-  /* 
-   * @param pos Position of both arm end points
-   * @throws ArithmeticException a2 could be undefined
-   * @returns angles Angle of the arm in relation to the robot and angle of the forearm in relation to the arm
+  /*
+   * @throws ArithmeticException if a2 is undefined
+   * 
+   * @returns angles Angle of the arm in relation to the robot and angle of the
+   * forearm in relation to the arm
    **/
   private double[] getAngles() throws ArithmeticException {
-    double distance = Math.sqrt(endPoint[0] * endPoint[0] + endPoint[1] * endPoint[1]);
+    double distanceFromOrigin = targetPosition.magnitude();
     double distMultiplier = 1;
-    if (distance > max)
-        distMultiplier = max / distance;
-    if (distance < min)
-        distMultiplier = min / distance;
-    distance *= distMultiplier;
-    double[] endPosition = { endPoint[0] * distMultiplier, endPoint[1] * distMultiplier };
+    if (distanceFromOrigin > maxDistance)
+      distMultiplier = maxDistance / distanceFromOrigin;
+    if (distanceFromOrigin < minDistance)
+      distMultiplier = minDistance / distanceFromOrigin;
+    distanceFromOrigin *= distMultiplier;
+    Vector endPosition = targetPosition.multiply(distMultiplier);
 
-    double a1 = Math.atan2(endPosition[1], endPosition[0]);
-    double secondAngle = Math.asin((endPosition[1] * endPosition[1] + endPosition[0] * endPosition[0]
-            - armLength * armLength - foreArmLength * foreArmLength) / 2 / armLength / foreArmLength);
-    double a2 = Math.asin(foreArmLength * Math.cos(secondAngle) / distance);
-    double firstAngle = a1 + a2;
-    // double[] elbow = { armLength * Math.cos(firstAngle), armLength * Math.sin(firstAngle) };
-    System.out.print(firstAngle + ", " + secondAngle);
-    double[] angles = { firstAngle, secondAngle };
-    return angles;
+    double endPointAngleFromOrigin = endPosition.angle();
+    double secondAngle = Math.asin((Math.pow(endPosition.magnitude(), 2) - armLength * armLength - forearmLength * forearmLength) / 2 / armLength / forearmLength);
+    double differenceFromEndpointToElbow = Math.asin(forearmLength * Math.cos(secondAngle) / distanceFromOrigin);
+    double firstAngle = endPointAngleFromOrigin + differenceFromEndpointToElbow;
+    System.out.println(firstAngle + ", " + secondAngle);
+    return new double[]{ firstAngle, secondAngle };
   }
 
   @Override

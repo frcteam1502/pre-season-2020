@@ -14,16 +14,16 @@ public class LinearSlideCommand extends Command {
 
   @Override
   protected void initialize() {
-  }
-
-  @Override
-  protected void execute() {
     Robot.slide.moveTo(place);
   }
 
   @Override
+  protected void execute() {
+  }
+
+  @Override
   protected boolean isFinished() {
-    return false;
+    return Robot.slide.isStable();
   }
 
   @Override

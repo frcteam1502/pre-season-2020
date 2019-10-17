@@ -56,6 +56,10 @@ public class LinearSlide extends Subsystem {
     currentType = currentType != cargo ? cargo : hatch;
   }
 
+  public boolean isStable() {
+    return true;
+  }
+
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.

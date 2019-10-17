@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.function.UnaryOperator;
+
 public class Vector {
   public double x;
   public double y;
@@ -19,6 +21,16 @@ public class Vector {
       magnitude * Math.cos(Math.toRadians(angle)),
       magnitude * Math.sin(Math.toRadians(angle))
     );
+  }
+
+  public static double subtractAngles(double target, double current) {
+    UnaryOperator<Double> constrainAngleToPositive = a -> {
+      a = 360 - (-a % 360);
+      a = a % 360;
+      return a;
+    };
+    double absoluteDifference = constrainAngleToPositive.apply(target - current);
+    return absoluteDifference > 180 ? absoluteDifference - 360 : absoluteDifference;
   }
 
   /**

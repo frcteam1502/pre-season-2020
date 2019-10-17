@@ -38,7 +38,7 @@ public class RobotMap {
   public static final int LEFT_JOYSTICK = 0;
   public static final int RIGHT_JOYSTICK = 1;
   public static final int MANIP_JOYSTICK = 2;
-
+  public static final int NEW_JOYSTICK = 3;
   // Just random test stuff, to be commented out here, oi, and robot
   public static final CANSparkMax LINEAR_SLIDE_LEFT = new CANSparkMax(12, MotorType.kBrushless);
   public static final CANSparkMax LINEAR_SLIDE_RIGHT = new CANSparkMax(13, MotorType.kBrushless);

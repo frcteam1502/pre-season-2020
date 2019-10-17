@@ -25,6 +25,8 @@ public class OI {
   public Joystick leftJoystick = new Joystick(RobotMap.LEFT_JOYSTICK);
 	public Joystick rightJoystick = new Joystick(RobotMap.RIGHT_JOYSTICK);
 	public XboxController manipJoystick = new XboxController(RobotMap.MANIP_JOYSTICK);
+	public Joystick newJoystick = new Joystick(RobotMap.NEW_JOYSTICK);
+	
 	Button dpUp = new DPadButton(manipJoystick, Direction.Up);
 	Button dpLeft = new DPadButton(manipJoystick, Direction.Left);
 	Button dpDown = new DPadButton(manipJoystick, Direction.Down);

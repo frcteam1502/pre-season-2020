@@ -7,11 +7,16 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.Vector;
 
-public class RoboticArmCommad extends Command {
-  public RoboticArmCommad() {
+public class RoboticArmMoveByJoystickCommand extends Command {
+
+  Joystick joystick = Robot.m_oi.newJoystick;
+
+  public RoboticArmMoveByJoystickCommand() {
     requires(Robot.arm);
   }
 
@@ -23,6 +28,7 @@ public class RoboticArmCommad extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Robot.arm.moveBy(new Vector(joystick.getX(), joystick.getY()));
   }
 
   // Make this return true when this Command no longer needs to run execute()
