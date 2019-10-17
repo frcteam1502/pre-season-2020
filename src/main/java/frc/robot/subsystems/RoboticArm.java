@@ -26,7 +26,7 @@ public class RoboticArm extends Subsystem {
   CANSparkMax armMotor, forearmMotor;
   CANEncoder armEnc, forearmEnc;
   PIDController armPID, forearmPID;
-  int[] endPoint = new int[2];
+  int[] endPoint = {0, 0};
 
   public RoboticArm(int armLength, int forearmLength, CANSparkMax armMotor, CANSparkMax forearmMotor) {
     this.armLength = armLength;
