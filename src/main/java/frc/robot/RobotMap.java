@@ -43,8 +43,8 @@ public class RobotMap {
   public static final CANSparkMax LINEAR_SLIDE_LEFT = new CANSparkMax(12, MotorType.kBrushless);
   public static final CANSparkMax LINEAR_SLIDE_RIGHT = new CANSparkMax(13, MotorType.kBrushless);
 
-  public static final CANSparkMax ARM_MOTOR = new CANSparkMax(14,MotorType.kBrushed);
-  public static final CANSparkMax FOREARM_MOTOR = new CANSparkMax(15, MotorType.kBrushed);
+  public static final CANSparkMax FOREARM_MOTOR = new CANSparkMax(14, MotorType.kBrushed);
+  public static final CANSparkMax ARM_MOTOR = new CANSparkMax(15, MotorType.kBrushed);
 
   // Sensors
   public static final ADXRS450_Gyro GYRO = new ADXRS450_Gyro(Port.kOnboardCS0);

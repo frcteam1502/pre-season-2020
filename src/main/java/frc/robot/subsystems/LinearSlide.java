@@ -4,11 +4,14 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.PIDController;
+import frc.robot.commands.LinearSlideMoveCommand;
 
 public class LinearSlide extends Subsystem {
 
-  static CANSparkMax left, right;
-  static CANEncoder leftEnc, rightEnc;
+  private CANSparkMax leftMotor, rightMotor;
+  private CANEncoder leftEnc, rightEnc;
+  private PIDController leftPID, rightPID;
 
   private final int BOTTOM_CARGO = 1000;
   private final int BOTTOM_HATCH = 1100;
@@ -16,19 +19,22 @@ public class LinearSlide extends Subsystem {
   private final int TOP_CARGO = 2000;
   private final int TOP_HATCH = 2100;
 
-  Position cargo = new Position(BOTTOM_CARGO, TOP_CARGO);
-  Position hatch = new Position(BOTTOM_HATCH, TOP_HATCH);
-  Position currentType = cargo;
+  private final Position CARGO = new Position(BOTTOM_CARGO, TOP_CARGO);
+  private final Position HATCH = new Position(BOTTOM_HATCH, TOP_HATCH);
+  private Position currentType = CARGO;
+  private Level currentLevel = null;
   
   public enum Level {
-    bottom, top
+    Bottom, Top
   }
   
   public LinearSlide(CANSparkMax leftMotor, CANSparkMax rightMotor) {
-    left = leftMotor;
-    right = rightMotor;
-    leftEnc = new CANEncoder(left);
-    rightEnc = new CANEncoder(right);
+    this.leftMotor = leftMotor;
+    this.rightMotor = rightMotor;
+    leftEnc = new CANEncoder(leftMotor);
+    rightEnc = new CANEncoder(rightMotor);
+    leftPID = new PIDController(1e-5, 1e-8, 1e-2);
+    rightPID = new PIDController(1e-5, 1e-8, 1e-2);
   }
 
   public class Position {
@@ -40,20 +46,20 @@ public class LinearSlide extends Subsystem {
     }
   }
 
-  public void moveTo(Level place) {
-    int encVal = place == Level.bottom ? currentType.bottom : currentType.top;
-    if (leftEnc.getPosition() < encVal && rightEnc.getPosition() < encVal) {
-      left.set(1.0);
-      right.set(-1.0);
-    }
-    else if (leftEnc.getPosition() > encVal && rightEnc.getPosition() > encVal) {
-      left.set(-1.0);
-      right.set(1.0);
-    }
+  public void move() {
+    int encVal = currentLevel == Level.Bottom ? currentType.bottom : currentType.top;
+    leftPID.input(encVal - leftEnc.getPosition());
+    rightPID.input(encVal - rightEnc.getPosition());
+    leftMotor.set(leftPID.getCorrection());
+    rightMotor.set(rightPID.getCorrection());
   }
 
+  public void setLevel(Level place) {
+    currentLevel = place;
+  }
+  
   public void toggle() {
-    currentType = currentType != cargo ? cargo : hatch;
+    currentType = currentType != CARGO ? CARGO : HATCH;
   }
 
   public boolean isStable() {
@@ -62,7 +68,6 @@ public class LinearSlide extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new LinearSlideMoveCommand());
   }
 }

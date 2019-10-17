@@ -30,12 +30,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     drivetrain = new Drivetrain(RobotMap.FRONT_RIGHT, RobotMap.BACK_RIGHT, RobotMap.FRONT_LEFT, RobotMap.BACK_LEFT);
-    // test stuff
+    arm = new RoboticArm(2, 1, RobotMap.ARM_MOTOR, RobotMap.FOREARM_MOTOR);
     slide = new LinearSlide(RobotMap.LINEAR_SLIDE_LEFT, RobotMap.LINEAR_SLIDE_RIGHT);
     swerveDrive = new SwerveDrive(RobotMap.FRONT_RIGHT_SWERVE, RobotMap.BACK_RIGHT_SWERVE, RobotMap.FRONT_LEFT_SWERVE, RobotMap.BACK_LEFT_SWERVE);
     arm = new RoboticArm(10, 5, RobotMap.ARM_MOTOR, RobotMap.FOREARM_MOTOR);
     m_oi = new OI();
-
     SmartDashboard.putData("Auto mode", m_chooser);
   }
 
