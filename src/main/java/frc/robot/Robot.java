@@ -67,7 +67,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -76,6 +75,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+
+    double angles[] = Robot.arm.getAngles();
+    SmartDashboard.putNumber("Robot arm angle", angles[0]);
+    SmartDashboard.putNumber("Robot forearm angle", angles[1]);
   }
 
   @Override

@@ -127,7 +127,7 @@ public class RoboticArm extends Subsystem {
    * @returns Angle of the arm in relation to the robot and angle of the
    * forearm in relation to the arm
    */
-  private double[] getAngles() {
+  public double[] getAngles() {
     double distanceFromOrigin = targetPosition.magnitude();
     double distMultiplier = 1;
     if (distanceFromOrigin > maxDistance)

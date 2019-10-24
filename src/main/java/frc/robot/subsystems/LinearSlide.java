@@ -47,9 +47,9 @@ public class LinearSlide extends Subsystem {
   }
 
   public void move() {
-    int encVal = currentLevel == Level.Bottom ? currentType.bottom : currentType.top;
-    leftPID.input(encVal - leftEnc.getPosition());
-    rightPID.input(encVal - rightEnc.getPosition());
+    int targetEncoderValue = currentLevel == Level.Bottom ? currentType.bottom : currentType.top;
+    leftPID.input(targetEncoderValue - leftEnc.getPosition());
+    rightPID.input(targetEncoderValue - rightEnc.getPosition());
     leftMotor.set(leftPID.getCorrection());
     rightMotor.set(rightPID.getCorrection());
   }
