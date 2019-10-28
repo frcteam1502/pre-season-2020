@@ -19,9 +19,9 @@ public class RoboticArm extends Subsystem {
 
   private int armLength, forearmLength;
   private int minDistance, maxDistance;
-  CANSparkMax armMotor, forearmMotor;
-  CANEncoder armEnc, forearmEnc;
-  PIDController armPID, forearmPID;
+  private CANSparkMax armMotor, forearmMotor;
+  private CANEncoder armEnc, forearmEnc;
+  private PIDController armPID, forearmPID;
   public Vector targetPosition = new Vector(0, 0);
 
   public RoboticArm(int armLength, int forearmLength, CANSparkMax armMotor, CANSparkMax forearmMotor) {
