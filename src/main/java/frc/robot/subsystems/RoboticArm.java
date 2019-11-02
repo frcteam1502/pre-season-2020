@@ -7,7 +7,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.PIDController;
 import frc.robot.Vector;
@@ -67,7 +66,7 @@ public class RoboticArm extends Subsystem {
    */
   public void initRoboticArm() {
     armEnc.setPosition(0);
-    forearmEnc.setPosition(angleToEncoderVal(forearmEnc, -90));
+    forearmEnc.setPosition(angleToEncoderVal(forearmEnc, 90));
   }
 
   /**
