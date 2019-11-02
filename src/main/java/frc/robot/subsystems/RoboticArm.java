@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.PIDController;
 import frc.robot.Vector;
@@ -23,6 +24,19 @@ public class RoboticArm extends Subsystem {
   private CANEncoder armEnc, forearmEnc;
   private PIDController armPID, forearmPID;
   public Vector targetPosition = new Vector(0, 0);
+
+  // public RoboticArm(int armLength, int forearmLength, Talon armMotor, Talon forearmMotor) {
+  //   this.armLength = armLength;
+  //   this.forearmLength = forearmLength;
+  //   this.armMotor = armMotor;
+  //   this.forearmMotor = forearmMotor;
+  //   armEnc = new CANEncoder(armMotor);
+  //   armPID = new PIDController(1e-5, 1e-8, 1e-2);
+  //   forearmPID = new PIDController(1e-5, 1e-8, 1e-2);
+  //   forearmEnc = new CANEncoder(forearmMotor);
+  //   minDistance = armLength - forearmLength;
+  //   maxDistance = armLength + forearmLength;
+  // }
 
   public RoboticArm(int armLength, int forearmLength, CANSparkMax armMotor, CANSparkMax forearmMotor) {
     this.armLength = armLength;
