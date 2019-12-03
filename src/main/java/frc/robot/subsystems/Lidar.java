@@ -29,7 +29,6 @@ public class Lidar extends Subsystem {
    * see documentation.
    * @return distance
    */
-
   public int getDistance() {
     byte [] buffer;
     buffer = new byte[2];
