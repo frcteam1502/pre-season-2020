@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.DPadButton.Direction;
+import frc.robot.commands.LidarSubsystem;
 import frc.robot.commands.LinearSlideCommand;
 import frc.robot.commands.RoboticArmMoveByCommand;
 import frc.robot.subsystems.LinearSlide.Level;
@@ -44,7 +45,7 @@ public class OI {
 				Robot.slide.toggle();
 			}
 		});
-		dpUp.whenPressed(new RoboticArmMoveByCommand(0, 1));
+		dpUp.whenPressed(new LidarSubsystem());
 		dpDown.whenPressed(new RoboticArmMoveByCommand(0, -1));
 		dpRight.whenPressed(new RoboticArmMoveByCommand(1, 0));
 		dpLeft.whenPressed(new RoboticArmMoveByCommand(-1, 0));

@@ -7,12 +7,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Lidar;
 import frc.robot.subsystems.LinearSlide;
 import frc.robot.subsystems.RoboticArm;
 import frc.robot.subsystems.SwerveDrive;
@@ -24,6 +26,7 @@ public class Robot extends TimedRobot {
   public static OI m_oi;
   public static SwerveDrive swerveDrive;
   public static RoboticArm arm;
+  public static Lidar lidar;
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -34,6 +37,7 @@ public class Robot extends TimedRobot {
     slide = new LinearSlide(RobotMap.LINEAR_SLIDE_LEFT, RobotMap.LINEAR_SLIDE_RIGHT);
     swerveDrive = new SwerveDrive(RobotMap.FRONT_RIGHT_SWERVE, RobotMap.BACK_RIGHT_SWERVE, RobotMap.FRONT_LEFT_SWERVE, RobotMap.BACK_LEFT_SWERVE);
     arm = new RoboticArm(10, 5, RobotMap.ARM_MOTOR, RobotMap.FOREARM_MOTOR);
+    lidar = new Lidar(new I2C(I2C.Port.kOnboard, RobotMap.LIDAR_ADDRESS));
     m_oi = new OI();
     SmartDashboard.putData("Auto mode", m_chooser);
   }
